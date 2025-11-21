@@ -40,12 +40,12 @@ class AuthState(rx.State):
     @rx.event
     def handle_google_login(self, data: dict):
         self.email = "google_user@example.com"
-        self.full_name = "Google User"
-        self.user_role = "Trader"
+        self.full_name = "Usuario Google"
+        self.user_role = "Operador"
         self.is_authenticated = True
         return rx.redirect("/dashboard")
 
-    bio: str = "Senior Market Analyst & Trader"
+    bio: str = "Analista de Mercado Senior & Operador"
     phone: str = "+1 (555) 123-4567"
     notifications_enabled: bool = True
     market_alerts_enabled: bool = False
@@ -89,22 +89,22 @@ class AuthState(rx.State):
             self.is_loading = True
             self.error_message = ""
             if not self.email or not self.password:
-                self.error_message = "Please fill in all fields."
+                self.error_message = "Por favor complete todos los campos."
                 self.is_loading = False
                 return
             await asyncio.sleep(1.5)
             if self.email == "admin" and self.password == "admin":
-                self.email = "admin@stockdash.com"
-                self.full_name = "System Administrator"
-                self.user_role = "Admin"
+                self.email = "admin@mara.com"
+                self.full_name = "Administrador del Sistema"
+                self.user_role = "Administrador"
                 self.is_authenticated = True
                 self.is_loading = False
             elif "error" in self.email:
-                self.error_message = "Invalid credentials."
+                self.error_message = "Credenciales inválidas."
                 self.is_loading = False
                 return
             else:
-                self.user_role = "Trader"
+                self.user_role = "Operador"
                 self.is_authenticated = True
                 self.is_loading = False
         if self.is_authenticated:
@@ -121,15 +121,15 @@ class AuthState(rx.State):
                 or (not self.confirm_password)
                 or (not self.full_name)
             ):
-                self.error_message = "All fields are required."
+                self.error_message = "Todos los campos son obligatorios."
                 self.is_loading = False
                 return
             if self.password != self.confirm_password:
-                self.error_message = "Passwords do not match."
+                self.error_message = "Las contraseñas no coinciden."
                 self.is_loading = False
                 return
             if len(self.password) < 6:
-                self.error_message = "Password must be at least 6 characters."
+                self.error_message = "La contraseña debe tener al menos 6 caracteres."
                 self.is_loading = False
                 return
             await asyncio.sleep(1.5)

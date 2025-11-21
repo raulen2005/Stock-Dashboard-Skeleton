@@ -8,21 +8,21 @@ def index() -> rx.Component:
             rx.el.div(
                 rx.icon("trending-up", class_name="w-16 h-16 text-blue-600 mb-6"),
                 rx.el.h1(
-                    "StockDash",
+                    "Mara",
                     class_name="text-5xl font-bold text-gray-900 mb-4 tracking-tight",
                 ),
                 rx.el.p(
-                    "Professional Market Analytics Platform",
+                    "Plataforma Profesional de Análisis de Mercado",
                     class_name="text-xl text-gray-600 mb-8 font-medium max-w-lg mx-auto text-center",
                 ),
                 rx.el.div(
                     rx.el.a(
-                        "Get Started",
+                        "Comenzar",
                         href="/dashboard",
                         class_name="inline-flex items-center px-8 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl mr-4",
                     ),
                     rx.el.a(
-                        "Sign In",
+                        "Iniciar Sesión",
                         href="/",
                         class_name="inline-flex items-center px-8 py-3 bg-white text-gray-700 font-semibold rounded-xl border border-gray-200 hover:bg-gray-50 transition-all duration-200",
                     ),
@@ -37,11 +37,11 @@ def index() -> rx.Component:
                             "bar-chart-3", class_name="w-12 h-12 text-blue-600 mb-4"
                         ),
                         rx.el.h3(
-                            "Real-time Data",
+                            "Datos en Tiempo Real",
                             class_name="text-xl font-semibold text-gray-900 mb-2",
                         ),
                         rx.el.p(
-                            "Access live stock prices and market data powered by Yahoo Finance",
+                            "Acceda a precios de acciones en vivo y datos de mercado impulsados por Yahoo Finance",
                             class_name="text-gray-600",
                         ),
                         class_name="text-center p-8 bg-white rounded-2xl shadow-sm border border-gray-100",
@@ -52,11 +52,11 @@ def index() -> rx.Component:
                     rx.el.div(
                         rx.icon("users", class_name="w-12 h-12 text-green-600 mb-4"),
                         rx.el.h3(
-                            "User Management",
+                            "Gestión de Usuarios",
                             class_name="text-xl font-semibold text-gray-900 mb-2",
                         ),
                         rx.el.p(
-                            "Complete user administration with role-based access control",
+                            "Administración completa de usuarios con control de acceso basado en roles",
                             class_name="text-gray-600",
                         ),
                         class_name="text-center p-8 bg-white rounded-2xl shadow-sm border border-gray-100",
@@ -69,11 +69,11 @@ def index() -> rx.Component:
                             "line-chart", class_name="w-12 h-12 text-purple-600 mb-4"
                         ),
                         rx.el.h3(
-                            "Advanced Charts",
+                            "Gráficos Avanzados",
                             class_name="text-xl font-semibold text-gray-900 mb-2",
                         ),
                         rx.el.p(
-                            "Interactive charts and technical analysis tools for informed decisions",
+                            "Gráficos interactivos y herramientas de análisis técnico para decisiones informadas",
                             class_name="text-gray-600",
                         ),
                         class_name="text-center p-8 bg-white rounded-2xl shadow-sm border border-gray-100",

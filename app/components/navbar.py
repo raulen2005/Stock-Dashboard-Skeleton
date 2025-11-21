@@ -37,26 +37,26 @@ def navbar() -> rx.Component:
                         class_name="bg-blue-600 p-2 rounded-lg shadow-md mr-3",
                     ),
                     rx.el.span(
-                        "StockDash",
+                        "Mara",
                         class_name="text-xl font-bold text-gray-900 tracking-tight",
                     ),
                     href="/dashboard",
                     class_name="flex items-center hover:opacity-90 transition-opacity flex-shrink-0 mr-8",
                 ),
                 rx.el.div(
-                    nav_link("Dashboard", "/dashboard", "layout-dashboard"),
-                    nav_link("Market", "/market", "bar-chart-2"),
-                    nav_link("Users", "/users", "users"),
-                    nav_link("Settings", "/settings", "settings"),
+                    nav_link("Panel", "/dashboard", "layout-dashboard"),
+                    nav_link("Mercado", "/market", "bar-chart-2"),
+                    nav_link("Usuarios", "/users", "users"),
+                    nav_link("Configuración", "/settings", "settings"),
                     class_name="hidden md:flex items-center space-x-2",
                 ),
                 class_name="flex items-center",
             ),
             rx.el.div(
-                nav_link("Dash", "/dashboard", "layout-dashboard"),
-                nav_link("Market", "/market", "bar-chart-2"),
-                nav_link("Users", "/users", "users"),
-                nav_link("Settings", "/settings", "settings"),
+                nav_link("Panel", "/dashboard", "layout-dashboard"),
+                nav_link("Mercado", "/market", "bar-chart-2"),
+                nav_link("Usuarios", "/users", "users"),
+                nav_link("Configuración", "/settings", "settings"),
                 class_name="flex md:hidden items-center space-x-1 overflow-x-auto no-scrollbar mask-fade-right mx-2",
             ),
             rx.el.div(
@@ -70,18 +70,19 @@ def navbar() -> rx.Component:
                 rx.el.div(
                     rx.el.button(
                         rx.image(
-                            src=f"https://api.dicebear.com/9.x/initials/svg?seed={AuthState.email}",
+                            src="https://api.dicebear.com/9.x/initials/svg?seed="
+                            + AuthState.email,
                             class_name="w-8 h-8 rounded-full border-2 border-white shadow-sm",
                         ),
                         rx.el.div(
                             rx.el.p(
                                 rx.cond(
-                                    AuthState.full_name, AuthState.full_name, "User"
+                                    AuthState.full_name, AuthState.full_name, "Usuario"
                                 ),
                                 class_name="text-sm font-semibold text-gray-700 leading-none",
                             ),
                             rx.el.p(
-                                "Pro Plan",
+                                "Plan Pro",
                                 class_name="text-xs text-blue-600 font-medium mt-0.5 text-left",
                             ),
                             class_name="hidden md:flex flex-col items-start ml-3 mr-2",
@@ -95,7 +96,7 @@ def navbar() -> rx.Component:
                         rx.el.div(
                             rx.el.div(
                                 rx.el.div(
-                                    "Signed in as",
+                                    "Iniciado como",
                                     class_name="text-xs text-gray-500 uppercase font-semibold tracking-wider mb-1",
                                 ),
                                 rx.el.div(
@@ -109,16 +110,18 @@ def navbar() -> rx.Component:
                                 class_name="px-4 py-3 border-b border-gray-100 bg-gray-50/50",
                             ),
                             rx.el.div(
-                                user_menu_item("My Profile", "user", href="/profile"),
+                                user_menu_item("Mi Perfil", "user", href="/profile"),
                                 user_menu_item(
-                                    "Settings", "settings", href="/settings"
+                                    "Configuración", "settings", href="/settings"
                                 ),
-                                user_menu_item("Billing", "credit-card", href="#"),
+                                user_menu_item("Facturación", "credit-card", href="#"),
                                 class_name="py-1",
                             ),
                             rx.el.div(
                                 user_menu_item(
-                                    "Sign out", "log-out", on_click=AuthState.logout
+                                    "Cerrar Sesión",
+                                    "log-out",
+                                    on_click=AuthState.logout,
                                 ),
                                 class_name="py-1 border-t border-gray-100",
                             ),

@@ -1,7 +1,7 @@
 import reflex as rx
 from app.components.layout import dashboard_layout
 from app.states.market_state import MarketState
-from app.components.charts import stock_area_chart
+from app.components.charts import stock_composed_chart
 
 
 def stat_card(title: str, value: str, change: str, is_positive: bool) -> rx.Component:
@@ -32,11 +32,11 @@ def watchlist_item(item: dict) -> rx.Component:
             rx.el.span(item["symbol"], class_name="font-bold text-gray-900"),
             rx.el.div(
                 rx.el.span(
-                    f"${item['price']}",
+                    "$" + item["price"].to(str),
                     class_name="text-sm font-medium text-gray-900 mr-2",
                 ),
                 rx.el.span(
-                    f"{item['change_percent']}%",
+                    item["change_percent"].to(str) + "%",
                     class_name=rx.cond(
                         item["is_positive"],
                         "text-xs font-medium text-green-600",
@@ -56,27 +56,27 @@ def dashboard_page() -> rx.Component:
     return dashboard_layout(
         rx.el.div(
             rx.el.div(
-                stat_card("Portfolio Value", "$124,592.00", "+12.5%", True),
-                stat_card("Total Profit", "$24,500.20", "+8.2%", True),
-                stat_card("Today's Gain", "-$1,203.00", "-1.2%", False),
-                stat_card("Active Positions", "12", "0", True),
+                stat_card("Valor del Portafolio", "$124,592.00", "+12.5%", True),
+                stat_card("Beneficio Total", "$24,500.20", "+8.2%", True),
+                stat_card("Ganancia Hoy", "-$1,203.00", "-1.2%", False),
+                stat_card("Posiciones Activas", "12", "0", True),
                 class_name="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8",
             ),
             rx.el.div(
                 rx.el.div(
                     rx.el.div(
                         rx.el.h3(
-                            "Market Overview",
+                            "Resumen de Mercado",
                             class_name="text-lg font-bold text-gray-800",
                         ),
                         rx.el.select(
-                            rx.el.option("AAPL", value="AAPL"),
-                            rx.el.option("MSFT", value="MSFT"),
-                            rx.el.option("GOOGL", value="GOOGL"),
-                            rx.el.option("TSLA", value="TSLA"),
+                            rx.foreach(
+                                MarketState.available_symbols,
+                                lambda sym: rx.el.option(sym, value=sym),
+                            ),
                             value=MarketState.selected_ticker,
                             on_change=MarketState.select_stock,
-                            class_name="text-sm border-gray-200 rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2 bg-white border outline-none cursor-pointer",
+                            class_name="text-sm border-gray-200 rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2 bg-white border outline-none cursor-pointer min-w-[120px]",
                         ),
                         class_name="flex justify-between items-center mb-6",
                     ),
@@ -88,20 +88,21 @@ def dashboard_page() -> rx.Component:
                             ),
                             class_name="w-full h-80 flex items-center justify-center bg-gray-50 rounded-xl",
                         ),
-                        stock_area_chart(),
+                        stock_composed_chart(),
                     ),
                     class_name="bg-white p-6 rounded-xl shadow-sm border border-gray-200 col-span-2",
                 ),
                 rx.el.div(
                     rx.el.h3(
-                        "Watchlist", class_name="text-lg font-bold text-gray-800 mb-4"
+                        "Lista de Seguimiento",
+                        class_name="text-lg font-bold text-gray-800 mb-4",
                     ),
                     rx.el.div(
                         rx.cond(
                             MarketState.watchlist_data.length() > 0,
                             rx.foreach(MarketState.watchlist_data, watchlist_item),
                             rx.el.div(
-                                "No stocks in watchlist",
+                                "Sin acciones en la lista",
                                 class_name="text-gray-400 text-center py-8 text-sm",
                             ),
                         ),

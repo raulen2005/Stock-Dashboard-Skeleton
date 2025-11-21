@@ -18,20 +18,19 @@ def profile_stat_card(title: str, value: str, icon: str, color: str) -> rx.Compo
 def profile_page() -> rx.Component:
     return dashboard_layout(
         rx.el.div(
-            rx.el.h1("My Profile", class_name="text-2xl font-bold text-gray-900 mb-6"),
+            rx.el.h1("Mi Perfil", class_name="text-2xl font-bold text-gray-900 mb-6"),
             rx.el.div(
                 rx.el.div(
                     rx.el.div(
                         rx.el.div(
                             rx.image(
-                                src=f"https://api.dicebear.com/9.x/initials/svg?seed={AuthState.email}",
+                                src="https://api.dicebear.com/9.x/initials/svg?seed="
+                                + AuthState.email,
                                 class_name="w-24 h-24 rounded-full border-4 border-white shadow-lg mb-4",
                             ),
                             rx.el.h2(
                                 rx.cond(
-                                    AuthState.full_name,
-                                    AuthState.full_name,
-                                    "User Name",
+                                    AuthState.full_name, AuthState.full_name, "Usuario"
                                 ),
                                 class_name="text-xl font-bold text-gray-900",
                             ),
@@ -40,7 +39,7 @@ def profile_page() -> rx.Component:
                             ),
                             rx.el.div(
                                 rx.el.span(
-                                    "Pro Member",
+                                    "Miembro Pro",
                                     class_name="px-3 py-1 bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-xs font-bold rounded-full mt-3 inline-block shadow-sm",
                                 ),
                                 class_name="flex justify-center",
@@ -50,7 +49,7 @@ def profile_page() -> rx.Component:
                         rx.el.div(
                             rx.el.div(
                                 rx.el.p(
-                                    "Email",
+                                    "Correo",
                                     class_name="text-xs font-medium text-gray-500 uppercase tracking-wide",
                                 ),
                                 rx.el.p(
@@ -61,22 +60,22 @@ def profile_page() -> rx.Component:
                             ),
                             rx.el.div(
                                 rx.el.p(
-                                    "Role",
+                                    "Rol",
                                     class_name="text-xs font-medium text-gray-500 uppercase tracking-wide",
                                 ),
                                 rx.el.p(
-                                    "Administrator",
+                                    "Administrador",
                                     class_name="text-sm font-medium text-gray-900 mt-1",
                                 ),
                                 class_name="py-3 border-b border-gray-100",
                             ),
                             rx.el.div(
                                 rx.el.p(
-                                    "Joined",
+                                    "Unido",
                                     class_name="text-xs font-medium text-gray-500 uppercase tracking-wide",
                                 ),
                                 rx.el.p(
-                                    "October 24, 2023",
+                                    "24 de Octubre, 2023",
                                     class_name="text-sm font-medium text-gray-900 mt-1",
                                 ),
                                 class_name="py-3",
@@ -87,10 +86,10 @@ def profile_page() -> rx.Component:
                     ),
                     rx.el.div(
                         profile_stat_card(
-                            "Total Trades", "1,245", "activity", "text-blue-600"
+                            "Total Operaciones", "1,245", "activity", "text-blue-600"
                         ),
                         profile_stat_card(
-                            "Win Rate", "68.5%", "trophy", "text-yellow-500"
+                            "Tasa de Éxito", "68.5%", "trophy", "text-yellow-500"
                         ),
                         class_name="grid grid-cols-2 gap-4 mt-6",
                     ),
@@ -100,11 +99,11 @@ def profile_page() -> rx.Component:
                     rx.el.div(
                         rx.el.div(
                             rx.el.h3(
-                                "Edit Profile",
+                                "Editar Perfil",
                                 class_name="text-lg font-semibold text-gray-900",
                             ),
                             rx.el.p(
-                                "Update your personal information",
+                                "Actualiza tu información personal",
                                 class_name="text-sm text-gray-500 mt-1",
                             ),
                             class_name="mb-6",
@@ -112,7 +111,7 @@ def profile_page() -> rx.Component:
                         rx.el.div(
                             rx.el.div(
                                 rx.el.label(
-                                    "Full Name",
+                                    "Nombre Completo",
                                     class_name="block text-sm font-medium text-gray-700 mb-1.5",
                                 ),
                                 rx.el.input(
@@ -124,7 +123,7 @@ def profile_page() -> rx.Component:
                             ),
                             rx.el.div(
                                 rx.el.label(
-                                    "Bio",
+                                    "Biografía",
                                     class_name="block text-sm font-medium text-gray-700 mb-1.5",
                                 ),
                                 rx.el.textarea(
@@ -137,7 +136,7 @@ def profile_page() -> rx.Component:
                             ),
                             rx.el.div(
                                 rx.el.label(
-                                    "Phone Number",
+                                    "Número de Teléfono",
                                     class_name="block text-sm font-medium text-gray-700 mb-1.5",
                                 ),
                                 rx.el.input(
@@ -151,18 +150,18 @@ def profile_page() -> rx.Component:
                         ),
                         rx.el.div(
                             rx.el.h3(
-                                "Preferences",
+                                "Preferencias",
                                 class_name="text-lg font-semibold text-gray-900 mb-4",
                             ),
                             rx.el.div(
                                 rx.el.div(
                                     rx.el.div(
                                         rx.el.h5(
-                                            "Email Notifications",
+                                            "Notificaciones por Correo",
                                             class_name="text-sm font-medium text-gray-900",
                                         ),
                                         rx.el.p(
-                                            "Receive daily market summaries",
+                                            "Recibe resúmenes diarios del mercado",
                                             class_name="text-xs text-gray-500 mt-0.5",
                                         ),
                                     ),
@@ -177,11 +176,11 @@ def profile_page() -> rx.Component:
                                 rx.el.div(
                                     rx.el.div(
                                         rx.el.h5(
-                                            "Market Alerts",
+                                            "Alertas de Mercado",
                                             class_name="text-sm font-medium text-gray-900",
                                         ),
                                         rx.el.p(
-                                            "Get notified when stocks hit targets",
+                                            "Recibe notificaciones cuando las acciones alcancen objetivos",
                                             class_name="text-xs text-gray-500 mt-0.5",
                                         ),
                                     ),
@@ -196,11 +195,11 @@ def profile_page() -> rx.Component:
                                 rx.el.div(
                                     rx.el.div(
                                         rx.el.h5(
-                                            "Two-Factor Authentication",
+                                            "Autenticación de Dos Factores",
                                             class_name="text-sm font-medium text-gray-900",
                                         ),
                                         rx.el.p(
-                                            "Secure your account with 2FA",
+                                            "Asegura tu cuenta con 2FA",
                                             class_name="text-xs text-gray-500 mt-0.5",
                                         ),
                                     ),
@@ -225,7 +224,7 @@ def profile_page() -> rx.Component:
                                     ),
                                     rx.icon("save", class_name="w-4 h-4 mr-2"),
                                 ),
-                                "Save Changes",
+                                "Guardar Cambios",
                                 disabled=AuthState.is_loading,
                                 on_click=AuthState.save_profile,
                                 class_name="flex items-center justify-center px-6 py-2.5 bg-gray-900 text-white rounded-lg hover:bg-gray-800 font-medium transition-colors disabled:opacity-70",

@@ -22,8 +22,8 @@ class UserState(rx.State):
             "id": "USR-001",
             "name": "Alice Freeman",
             "email": "alice@example.com",
-            "role": "Admin",
-            "status": "Active",
+            "role": "Administrador",
+            "status": "Activo",
             "joined_date": "2023-01-15",
             "avatar_seed": "Alice",
         },
@@ -31,8 +31,8 @@ class UserState(rx.State):
             "id": "USR-002",
             "name": "Bob Smith",
             "email": "bob@example.com",
-            "role": "Trader",
-            "status": "Active",
+            "role": "Operador",
+            "status": "Activo",
             "joined_date": "2023-03-10",
             "avatar_seed": "Bob",
         },
@@ -40,8 +40,8 @@ class UserState(rx.State):
             "id": "USR-003",
             "name": "Charlie Davis",
             "email": "charlie@example.com",
-            "role": "Viewer",
-            "status": "Inactive",
+            "role": "Espectador",
+            "status": "Inactivo",
             "joined_date": "2023-06-22",
             "avatar_seed": "Charlie",
         },
@@ -49,8 +49,8 @@ class UserState(rx.State):
             "id": "USR-004",
             "name": "Diana Prince",
             "email": "diana@example.com",
-            "role": "Trader",
-            "status": "Active",
+            "role": "Operador",
+            "status": "Activo",
             "joined_date": "2023-07-05",
             "avatar_seed": "Diana",
         },
@@ -58,22 +58,22 @@ class UserState(rx.State):
             "id": "USR-005",
             "name": "Evan Wright",
             "email": "evan@example.com",
-            "role": "Viewer",
-            "status": "Active",
+            "role": "Espectador",
+            "status": "Activo",
             "joined_date": "2023-08-14",
             "avatar_seed": "Evan",
         },
     ]
     search_query: str = ""
-    filter_role: str = "All"
-    filter_status: str = "All"
+    filter_role: str = "Todos"
+    filter_status: str = "Todos"
     is_modal_open: bool = False
     is_loading: bool = False
     current_user_id: str = ""
     form_name: str = ""
     form_email: str = ""
-    form_role: str = "Trader"
-    form_status: str = "Active"
+    form_role: str = "Operador"
+    form_status: str = "Activo"
 
     @rx.var
     def filtered_users(self) -> list[User]:
@@ -85,9 +85,9 @@ class UserState(rx.State):
                 for u in filtered
                 if query in u["name"].lower() or query in u["email"].lower()
             ]
-        if self.filter_role != "All":
+        if self.filter_role != "Todos":
             filtered = [u for u in filtered if u["role"] == self.filter_role]
-        if self.filter_status != "All":
+        if self.filter_status != "Todos":
             filtered = [u for u in filtered if u["status"] == self.filter_status]
         return filtered
 
@@ -132,8 +132,8 @@ class UserState(rx.State):
         self.current_user_id = ""
         self.form_name = ""
         self.form_email = ""
-        self.form_role = "Trader"
-        self.form_status = "Active"
+        self.form_role = "Operador"
+        self.form_status = "Activo"
         self.is_modal_open = True
 
     @rx.event

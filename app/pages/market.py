@@ -1,7 +1,7 @@
 import reflex as rx
 from app.components.layout import dashboard_layout
 from app.states.market_state import MarketState
-from app.components.charts import stock_area_chart
+from app.components.charts import stock_composed_chart
 
 
 def search_box() -> rx.Component:
@@ -12,7 +12,7 @@ def search_box() -> rx.Component:
                 class_name="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2",
             ),
             rx.el.input(
-                placeholder="Search symbol (e.g. AAPL)...",
+                placeholder="Buscar símbolo (ej. AAPL)...",
                 on_change=MarketState.set_search_query,
                 class_name="w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-shadow shadow-sm",
                 default_value=MarketState.search_query,
@@ -104,11 +104,14 @@ def market_page() -> rx.Component:
                         ),
                         rx.el.div(
                             rx.el.span(
-                                f"${MarketState.current_price}",
+                                "$" + MarketState.current_price.to(str),
                                 class_name="text-3xl font-bold text-gray-900 mr-3",
                             ),
                             rx.el.span(
-                                f"{MarketState.price_change} ({MarketState.price_change_percent}%)",
+                                MarketState.price_change.to(str)
+                                + " ("
+                                + MarketState.price_change_percent.to(str)
+                                + "%)",
                                 class_name=rx.cond(
                                     MarketState.is_positive_change,
                                     "text-green-600 font-semibold bg-green-50 px-2 py-1 rounded-lg",
@@ -126,8 +129,8 @@ def market_page() -> rx.Component:
                                 MarketState.watchlist.contains(
                                     MarketState.selected_ticker
                                 ),
-                                "Following",
-                                "Add to Watchlist",
+                                "Siguiendo",
+                                "Añadir a Lista",
                             ),
                             on_click=rx.cond(
                                 MarketState.watchlist.contains(
@@ -153,7 +156,7 @@ def market_page() -> rx.Component:
                 rx.el.div(
                     rx.el.div(
                         rx.el.h3(
-                            "Price History",
+                            "Historial de Precios",
                             class_name="text-lg font-bold text-gray-900",
                         ),
                         rx.el.div(
@@ -161,7 +164,7 @@ def market_page() -> rx.Component:
                             time_range_button("5D", "5d"),
                             time_range_button("1M", "1mo"),
                             time_range_button("6M", "6mo"),
-                            time_range_button("1Y", "1y"),
+                            time_range_button("1A", "1y"),
                             time_range_button("MAX", "max"),
                             class_name="flex space-x-1 bg-gray-100 p-1 rounded-lg",
                         ),
@@ -175,33 +178,69 @@ def market_page() -> rx.Component:
                             ),
                             class_name="h-[350px] w-full flex items-center justify-center bg-gray-50 rounded-xl",
                         ),
-                        stock_area_chart(),
+                        stock_composed_chart(),
+                    ),
+                    rx.el.div(
+                        rx.el.h4(
+                            "Comparar con:",
+                            class_name="text-sm font-medium text-gray-700 mb-2",
+                        ),
+                        rx.el.div(
+                            rx.foreach(
+                                MarketState.available_symbols,
+                                lambda sym: rx.cond(
+                                    sym != MarketState.selected_ticker,
+                                    rx.el.button(
+                                        sym,
+                                        on_click=lambda: MarketState.toggle_comparison(
+                                            sym
+                                        ),
+                                        class_name=rx.cond(
+                                            MarketState.comparison_symbols.contains(
+                                                sym
+                                            ),
+                                            "px-2 py-1 text-xs bg-blue-600 text-white rounded-full border border-blue-600 transition-colors",
+                                            "px-2 py-1 text-xs bg-white text-gray-600 rounded-full border border-gray-200 hover:border-blue-400 transition-colors",
+                                        ),
+                                    ),
+                                    rx.fragment(),
+                                ),
+                            ),
+                            class_name="flex flex-wrap gap-2",
+                        ),
+                        class_name="mt-6 pt-6 border-t border-gray-100",
                     ),
                     class_name="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 mb-8",
                 ),
                 rx.el.div(
                     rx.el.h3(
-                        "Key Statistics",
+                        "Estadísticas Clave",
                         class_name="text-lg font-bold text-gray-900 mb-4",
                     ),
                     rx.el.div(
                         market_stat_item(
-                            "Previous Close",
-                            f"${MarketState.stock_info['previousClose']}",
-                        ),
-                        market_stat_item("Open", f"${MarketState.stock_info['open']}"),
-                        market_stat_item(
-                            "Day Range",
-                            f"${MarketState.stock_info['dayLow']} - ${MarketState.stock_info['dayHigh']}",
+                            "Cierre Anterior",
+                            "$" + MarketState.stock_info["previousClose"].to(str),
                         ),
                         market_stat_item(
-                            "Volume", f"{MarketState.stock_info['volume']:,}"
+                            "Apertura", "$" + MarketState.stock_info["open"].to(str)
                         ),
                         market_stat_item(
-                            "Market Cap", f"${MarketState.stock_info['marketCap']:,}"
+                            "Rango Día",
+                            "$"
+                            + MarketState.stock_info["dayLow"].to(str)
+                            + " - $"
+                            + MarketState.stock_info["dayHigh"].to(str),
                         ),
                         market_stat_item(
-                            "P/E Ratio", f"{MarketState.stock_info['trailingPE']}"
+                            "Volumen", MarketState.stock_info["volume"].to(str)
+                        ),
+                        market_stat_item(
+                            "Cap. Mercado",
+                            "$" + MarketState.stock_info["marketCap"].to(str),
+                        ),
+                        market_stat_item(
+                            "Ratio P/E", MarketState.stock_info["trailingPE"].to(str)
                         ),
                         class_name="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4",
                     ),
@@ -209,7 +248,7 @@ def market_page() -> rx.Component:
                 ),
                 rx.el.div(
                     rx.el.h3(
-                        "About Company",
+                        "Sobre la Empresa",
                         class_name="text-lg font-bold text-gray-900 mb-4",
                     ),
                     rx.el.p(
@@ -229,7 +268,7 @@ def market_page() -> rx.Component:
                         ),
                         rx.el.div(
                             rx.el.span(
-                                "Industry:",
+                                "Industria:",
                                 class_name="font-semibold text-gray-900 mr-2",
                             ),
                             rx.el.span(

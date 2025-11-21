@@ -12,10 +12,10 @@ def auth_layout(content: rx.Component) -> rx.Component:
                 rx.el.div(
                     rx.icon("trending-up", class_name="w-10 h-10 text-blue-600 mb-4"),
                     rx.el.h1(
-                        "StockDash", class_name="text-3xl font-bold text-gray-900 mb-2"
+                        "Mara", class_name="text-3xl font-bold text-gray-900 mb-2"
                     ),
                     rx.el.p(
-                        "Professional Market Analytics",
+                        "Analítica de Mercado Profesional",
                         class_name="text-gray-500 mb-8 font-medium",
                     ),
                     content,
@@ -43,11 +43,11 @@ def login_page() -> rx.Component:
             ),
             rx.el.div(
                 rx.el.label(
-                    "Email Address",
+                    "Correo Electrónico",
                     class_name="block text-sm font-medium text-gray-700 mb-1.5",
                 ),
                 rx.el.input(
-                    placeholder="you@company.com",
+                    placeholder="tu@empresa.com",
                     on_change=AuthState.set_email,
                     class_name="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-900 placeholder-gray-400",
                     default_value=AuthState.email,
@@ -56,7 +56,7 @@ def login_page() -> rx.Component:
             ),
             rx.el.div(
                 rx.el.label(
-                    "Password",
+                    "Contraseña",
                     class_name="block text-sm font-medium text-gray-700 mb-1.5",
                 ),
                 rx.el.input(
@@ -74,7 +74,7 @@ def login_page() -> rx.Component:
                     rx.el.div(
                         class_name="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto"
                     ),
-                    "Sign In",
+                    "Iniciar Sesión",
                 ),
                 on_click=AuthState.login,
                 disabled=AuthState.is_loading,
@@ -83,7 +83,7 @@ def login_page() -> rx.Component:
             rx.el.div(
                 rx.el.div(class_name="h-px bg-gray-200 w-full"),
                 rx.el.span(
-                    "or",
+                    "o",
                     class_name="text-xs text-gray-400 uppercase px-2 bg-white relative z-10",
                 ),
                 rx.el.div(class_name="h-px bg-gray-200 w-full"),
@@ -94,9 +94,9 @@ def login_page() -> rx.Component:
                 class_name="w-full flex justify-center mb-6",
             ),
             rx.el.div(
-                "Don't have an account? ",
+                "¿No tienes una cuenta? ",
                 rx.el.a(
-                    "Create account",
+                    "Crear cuenta",
                     href="/register",
                     class_name="text-blue-600 hover:text-blue-700 font-semibold hover:underline",
                 ),
@@ -121,11 +121,11 @@ def register_page() -> rx.Component:
             ),
             rx.el.div(
                 rx.el.label(
-                    "Full Name",
+                    "Nombre Completo",
                     class_name="block text-sm font-medium text-gray-700 mb-1.5",
                 ),
                 rx.el.input(
-                    placeholder="John Doe",
+                    placeholder="Juan Pérez",
                     on_change=AuthState.set_full_name,
                     class_name="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-900 placeholder-gray-400",
                     default_value=AuthState.full_name,
@@ -134,11 +134,11 @@ def register_page() -> rx.Component:
             ),
             rx.el.div(
                 rx.el.label(
-                    "Email Address",
+                    "Correo Electrónico",
                     class_name="block text-sm font-medium text-gray-700 mb-1.5",
                 ),
                 rx.el.input(
-                    placeholder="you@company.com",
+                    placeholder="tu@empresa.com",
                     on_change=AuthState.set_email,
                     class_name="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-900 placeholder-gray-400",
                     default_value=AuthState.email,
@@ -147,7 +147,7 @@ def register_page() -> rx.Component:
             ),
             rx.el.div(
                 rx.el.label(
-                    "Password",
+                    "Contraseña",
                     class_name="block text-sm font-medium text-gray-700 mb-1.5",
                 ),
                 rx.el.input(
@@ -161,7 +161,7 @@ def register_page() -> rx.Component:
             ),
             rx.el.div(
                 rx.el.label(
-                    "Confirm Password",
+                    "Confirmar Contraseña",
                     class_name="block text-sm font-medium text-gray-700 mb-1.5",
                 ),
                 rx.el.input(
@@ -175,12 +175,12 @@ def register_page() -> rx.Component:
             ),
             rx.el.div(
                 rx.el.label(
-                    "Role", class_name="block text-sm font-medium text-gray-700 mb-1.5"
+                    "Rol", class_name="block text-sm font-medium text-gray-700 mb-1.5"
                 ),
                 rx.el.select(
-                    rx.el.option("Trader", value="Trader"),
-                    rx.el.option("Admin", value="Admin"),
-                    rx.el.option("Viewer", value="Viewer"),
+                    rx.el.option("Operador", value="Trader"),
+                    rx.el.option("Administrador", value="Admin"),
+                    rx.el.option("Espectador", value="Viewer"),
                     value=AuthState.registration_role,
                     on_change=AuthState.set_registration_role,
                     class_name="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-900 cursor-pointer",
@@ -193,7 +193,7 @@ def register_page() -> rx.Component:
                     rx.el.div(
                         class_name="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto"
                     ),
-                    "Create Account",
+                    "Crear Cuenta",
                 ),
                 on_click=AuthState.register,
                 disabled=AuthState.is_loading,
@@ -202,7 +202,7 @@ def register_page() -> rx.Component:
             rx.el.div(
                 rx.el.div(class_name="h-px bg-gray-200 w-full"),
                 rx.el.span(
-                    "or",
+                    "o",
                     class_name="text-xs text-gray-400 uppercase px-2 bg-white relative z-10",
                 ),
                 rx.el.div(class_name="h-px bg-gray-200 w-full"),
@@ -213,9 +213,9 @@ def register_page() -> rx.Component:
                 class_name="w-full flex justify-center mb-6",
             ),
             rx.el.div(
-                "Already have an account? ",
+                "¿Ya tienes una cuenta? ",
                 rx.el.a(
-                    "Sign In",
+                    "Iniciar Sesión",
                     href="/",
                     class_name="text-blue-600 hover:text-blue-700 font-semibold hover:underline",
                 ),

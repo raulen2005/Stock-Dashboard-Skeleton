@@ -6,26 +6,26 @@ import logging
 from datetime import datetime
 
 POPULAR_STOCKS = [
-    {"symbol": "AAPL", "name": "Apple Inc.", "sector": "Technology"},
-    {"symbol": "MSFT", "name": "Microsoft Corp.", "sector": "Technology"},
-    {"symbol": "GOOGL", "name": "Alphabet Inc.", "sector": "Technology"},
-    {"symbol": "AMZN", "name": "Amazon.com Inc.", "sector": "Consumer Cyclical"},
-    {"symbol": "NVDA", "name": "NVIDIA Corp.", "sector": "Technology"},
-    {"symbol": "TSLA", "name": "Tesla Inc.", "sector": "Consumer Cyclical"},
-    {"symbol": "META", "name": "Meta Platforms", "sector": "Technology"},
-    {"symbol": "NFLX", "name": "Netflix Inc.", "sector": "Communication Services"},
-    {"symbol": "AMD", "name": "Advanced Micro Devices", "sector": "Technology"},
-    {"symbol": "INTC", "name": "Intel Corp.", "sector": "Technology"},
-    {"symbol": "CRM", "name": "Salesforce Inc.", "sector": "Technology"},
-    {"symbol": "ADBE", "name": "Adobe Inc.", "sector": "Technology"},
-    {"symbol": "PYPL", "name": "PayPal Holdings", "sector": "Financial Services"},
-    {"symbol": "COIN", "name": "Coinbase Global", "sector": "Financial Services"},
-    {"symbol": "HOOD", "name": "Robinhood Markets", "sector": "Financial Services"},
-    {"symbol": "JPM", "name": "JPMorgan Chase", "sector": "Financial Services"},
-    {"symbol": "BAC", "name": "Bank of America", "sector": "Financial Services"},
-    {"symbol": "DIS", "name": "Walt Disney Co.", "sector": "Communication Services"},
-    {"symbol": "NKE", "name": "Nike Inc.", "sector": "Consumer Cyclical"},
-    {"symbol": "SBUX", "name": "Starbucks Corp.", "sector": "Consumer Cyclical"},
+    {"symbol": "AAPL", "name": "Apple Inc.", "sector": "Tecnología"},
+    {"symbol": "MSFT", "name": "Microsoft Corp.", "sector": "Tecnología"},
+    {"symbol": "GOOGL", "name": "Alphabet Inc.", "sector": "Tecnología"},
+    {"symbol": "AMZN", "name": "Amazon.com Inc.", "sector": "Consumo Cíclico"},
+    {"symbol": "NVDA", "name": "NVIDIA Corp.", "sector": "Tecnología"},
+    {"symbol": "TSLA", "name": "Tesla Inc.", "sector": "Consumo Cíclico"},
+    {"symbol": "META", "name": "Meta Platforms", "sector": "Tecnología"},
+    {"symbol": "NFLX", "name": "Netflix Inc.", "sector": "Servicios de Comunicación"},
+    {"symbol": "AMD", "name": "Advanced Micro Devices", "sector": "Tecnología"},
+    {"symbol": "INTC", "name": "Intel Corp.", "sector": "Tecnología"},
+    {"symbol": "CRM", "name": "Salesforce Inc.", "sector": "Tecnología"},
+    {"symbol": "ADBE", "name": "Adobe Inc.", "sector": "Tecnología"},
+    {"symbol": "PYPL", "name": "PayPal Holdings", "sector": "Servicios Financieros"},
+    {"symbol": "COIN", "name": "Coinbase Global", "sector": "Servicios Financieros"},
+    {"symbol": "HOOD", "name": "Robinhood Markets", "sector": "Servicios Financieros"},
+    {"symbol": "JPM", "name": "JPMorgan Chase", "sector": "Servicios Financieros"},
+    {"symbol": "BAC", "name": "Bank of America", "sector": "Servicios Financieros"},
+    {"symbol": "DIS", "name": "Walt Disney Co.", "sector": "Servicios de Comunicación"},
+    {"symbol": "NKE", "name": "Nike Inc.", "sector": "Consumo Cíclico"},
+    {"symbol": "SBUX", "name": "Starbucks Corp.", "sector": "Consumo Cíclico"},
 ]
 
 
@@ -33,7 +33,7 @@ class MarketState(rx.State):
     search_query: str = ""
     selected_ticker: str = "AAPL"
     current_company_name: str = "Apple Inc."
-    current_sector: str = "Technology"
+    current_sector: str = "Tecnología"
     current_price: float = 0.0
     price_change: float = 0.0
     price_change_percent: float = 0.0
@@ -44,6 +44,31 @@ class MarketState(rx.State):
     error_message: str = ""
     watchlist: list[str] = ["AAPL", "MSFT", "TSLA", "NVDA"]
     watchlist_data: list[dict[str, str | float | bool]] = []
+    comparison_symbols: list[str] = []
+    available_symbols: list[str] = [s["symbol"] for s in POPULAR_STOCKS]
+    colors: list[str] = ["#FF6B6B", "#4ECDC4", "#45B7D1", "#96CEB4", "#FFEEAD"]
+    hover_date: str = ""
+    hover_price: str = ""
+
+    @rx.event
+    def set_hover_data(self, data: dict):
+        if data and "activePayload" in data and data["activePayload"]:
+            self.hover_date = data["activeLabel"]
+            try:
+                payload = data["activePayload"][0]["payload"]
+                price = payload.get("price")
+                self.hover_price = str(price) if price is not None else ""
+            except (KeyError, IndexError, TypeError) as e:
+                logging.exception(f"Error processing hover data: {e}")
+                self.hover_price = ""
+        else:
+            self.hover_date = ""
+            self.hover_price = ""
+
+    @rx.event
+    def clear_hover_data(self):
+        self.hover_date = ""
+        self.hover_price = ""
 
     @rx.var
     def search_results(self) -> list[dict[str, str]]:
@@ -71,6 +96,16 @@ class MarketState(rx.State):
         return MarketState.fetch_stock_data
 
     @rx.event
+    def toggle_comparison(self, symbol: str):
+        if symbol == self.selected_ticker:
+            return
+        if symbol in self.comparison_symbols:
+            self.comparison_symbols.remove(symbol)
+        else:
+            self.comparison_symbols.append(symbol)
+        return MarketState.fetch_stock_data
+
+    @rx.event
     def set_time_range(self, range: str):
         self.time_range = range
         return MarketState.fetch_stock_data
@@ -84,33 +119,48 @@ class MarketState(rx.State):
             ticker_symbol = self.selected_ticker
             period = self.time_range
             loop = asyncio.get_running_loop()
-            hist = await loop.run_in_executor(
+            main_hist = await loop.run_in_executor(
                 None, lambda: yf.Ticker(ticker_symbol).history(period=period)
             )
             info = await loop.run_in_executor(
                 None, lambda: yf.Ticker(ticker_symbol).info
             )
-            async with self:
-                data = []
-                if not hist.empty:
-                    hist = hist.reset_index()
-                    for _, row in hist.iterrows():
-                        date_str = ""
-                        ts = row["Date"]
-                        if period in ["1d", "5d"]:
-                            date_str = ts.strftime("%H:%M")
+            data = []
+            if not main_hist.empty:
+                main_hist = main_hist.reset_index()
+                comparison_data = {}
+                async with self:
+                    comp_syms = self.comparison_symbols
+                for sym in comp_syms:
+                    comp_hist = await loop.run_in_executor(
+                        None, lambda: yf.Ticker(sym).history(period=period)
+                    )
+                    if not comp_hist.empty:
+                        comp_hist = comp_hist.reset_index()
+                        comparison_data[sym] = comp_hist
+                for _, row in main_hist.iterrows():
+                    date_val = row["Date"]
+                    date_str = ""
+                    if period in ["1d", "5d"]:
+                        date_str = date_val.strftime("%H:%M")
+                    else:
+                        date_str = date_val.strftime("%b %d")
+                    point = {
+                        "date": date_str,
+                        "price": round(row["Close"], 2),
+                        "volume": int(row["Volume"]),
+                        "open": round(row["Open"], 2),
+                        "high": round(row["High"], 2),
+                        "low": round(row["Low"], 2),
+                    }
+                    for sym, hist_df in comparison_data.items():
+                        match = hist_df[hist_df["Date"] == date_val]
+                        if not match.empty:
+                            point[sym] = round(match.iloc[0]["Close"], 2)
                         else:
-                            date_str = ts.strftime("%b %d")
-                        data.append(
-                            {
-                                "date": date_str,
-                                "price": round(row["Close"], 2),
-                                "volume": int(row["Volume"]),
-                                "open": round(row["Open"], 2),
-                                "high": round(row["High"], 2),
-                                "low": round(row["Low"], 2),
-                            }
-                        )
+                            point[sym] = None
+                    data.append(point)
+            async with self:
                 self.stock_data = data
                 self.stock_info = info
                 self.current_company_name = info.get(
@@ -129,7 +179,7 @@ class MarketState(rx.State):
         except Exception as e:
             logging.exception(f"Error fetching stock data: {e}")
             async with self:
-                self.error_message = f"Failed to fetch data: {str(e)}"
+                self.error_message = f"Error al obtener datos: {str(e)}"
                 self.is_loading = False
 
     @rx.event(background=True)
